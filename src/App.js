@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { v4 } from "uuid";
 import AddPost from "./components/AddPost";
 import Home from "./components/Home";
+import swal from "sweetalert";
 
 import "./App.css";
 
@@ -20,10 +20,12 @@ const App = () => {
 
   function onSubmit() {
     if (title && time && status) {
-      data.push({ id: v4(), title, time, status });
+      data.push({ title, time, status });
       setLocalStorage();
-      alert("Successfully🎉");
-      document.querySelector(".form").reset()
+      swal("Successfully!", "Post added", "success");
+      setTitle("")
+      setTime("")
+      setStatus("")
     } else {
       alert("To'liq kiriting");
     }
@@ -46,10 +48,7 @@ const App = () => {
     publ = data.filter((item, index) => {
       return item.status === "Published";
     });
-    
   }
-  CountData()
-  
 
   function changeStatus(e) {
     let changeStatus = e.target.value;
@@ -72,24 +71,28 @@ const App = () => {
         ? JSON.parse(localStorage.getItem("data"))
         : []
     );
-   
-    
   }, [search]);
 
   function searchHandle(e) {
     setSearch(e.target.value);
+    filteredFunc()
   }
 
   function selectHandle(e) {
     setSelectStatus(e);
+    filteredFunc();
   }
 
-  const filteredData = data.filter((item) => {
-    return (
-      item.title.toLowerCase().includes(search.toLowerCase()) &&
-      (selectStatus ? item.status === selectStatus : true)
-    );
-  });
+  function filteredFunc() {
+    const filteredData = data.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(search.toLowerCase()) &&
+        (selectStatus ? item.status === selectStatus : true)
+      );
+    });
+
+    setData(filteredData)
+  }
 
   return (
     <div>
@@ -98,7 +101,7 @@ const App = () => {
           path="/"
           element={
             <Home
-              data={filteredData}
+              data={data}
               changeStatus={changeStatus}
               setId={setId}
               searchHandle={searchHandle}

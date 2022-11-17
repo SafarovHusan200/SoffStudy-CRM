@@ -64,7 +64,7 @@ function AddPost({
                           value={status}
                           onChange={(e) => setStatus(e.target.value)}
                         >
-                          <option>Status tanlang</option>
+                          <option >Tanlang</option>
                           <option value="Draft">Draft</option>
                           <option value="Published">Published</option>
                         </select>
